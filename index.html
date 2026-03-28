@@ -3,422 +3,496 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atharva Sail | VAPT Analyst</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>Atharva Sail | Secure OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #050505;
-            --main-green: #00ff41;
-            --dark-green: #008f11;
-            --alert-red: #ff003c;
-            --terminal-bg: rgba(5, 5, 5, 0.85);
-            --glow: 0 0 10px var(--main-green);
+            --bg: #020202;
+            --term-bg: rgba(5, 5, 10, 0.85);
+            --green: #0f0;
+            --green-dim: #008f11;
+            --cyan: #0ff;
+            --red: #ff003c;
+            --scanline: rgba(0, 255, 0, 0.05);
+            --glow: 0 0 10px var(--green), 0 0 20px var(--green-dim);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: crosshair;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: text; }
+        
         body {
-            background-color: var(--bg);
-            color: var(--main-green);
-            font-family: 'Share Tech Mono', monospace;
-            overflow: hidden; /* Hide scrollbars for the app-like feel */
+            background-color: var(--bg); color: var(--green); font-family: 'Fira Code', monospace;
+            height: 100vh; overflow: hidden; user-select: none;
         }
 
-        /* Matrix Background */
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            opacity: 0.3;
+        /* CRT Effects */
+        .crt::before {
+            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 999; background-size: 100% 2px, 3px 100%; pointer-events: none;
+        }
+        .crt::after {
+            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.4) 100%);
+            z-index: 1000; pointer-events: none;
         }
 
-        /* Main Layout */
-        .container {
-            display: flex;
-            height: 100vh;
-            padding: 20px;
-            gap: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
+        canvas { position: fixed; top: 0; left: 0; z-index: 1; opacity: 0.25; pointer-events: none; }
+
+        /* Boot Screen */
+        #boot-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000;
+            z-index: 5000; padding: 20px; color: var(--green); font-size: 1.2rem;
+            display: flex; flex-direction: column; justify-content: flex-end;
         }
+
+        /* OS Interface */
+        .os-container { position: relative; z-index: 10; height: 100vh; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 1s; }
+        
+        .window {
+            width: 90%; max-width: 1200px; height: 85vh; background: var(--term-bg);
+            border: 1px solid var(--green); box-shadow: var(--glow); border-radius: 4px;
+            display: flex; flex-direction: column; backdrop-filter: blur(10px);
+            position: absolute;
+        }
+
+        .title-bar {
+            background: var(--green); color: #000; padding: 5px 15px; font-weight: bold;
+            display: flex; justify-content: space-between; cursor: grab; user-select: none;
+        }
+        .title-bar:active { cursor: grabbing; }
+
+        .window-content { display: flex; flex: 1; overflow: hidden; }
 
         /* Sidebar Navigation */
         .sidebar {
-            flex: 1;
-            max-width: 300px;
-            background: var(--terminal-bg);
-            border: 1px solid var(--dark-green);
-            box-shadow: var(--glow);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            border-radius: 5px;
-            backdrop-filter: blur(5px);
+            width: 250px; border-right: 1px solid var(--green-dim); padding: 15px;
+            display: flex; flex-direction: column; gap: 10px; background: rgba(0,255,0,0.02);
         }
-
-        .profile-pic {
-            width: 100%;
-            height: 150px;
-            border: 1px dashed var(--main-green);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(0, 255, 65, 0.1) 10px,
-                rgba(0, 255, 65, 0.1) 20px
-            );
+        .sys-info { text-align: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px dashed var(--green-dim); }
+        .sys-info h2 { color: #fff; text-shadow: 0 0 5px #fff; letter-spacing: 2px; }
+        
+        .nav-btn {
+            background: transparent; border: 1px solid transparent; color: var(--green);
+            padding: 8px 10px; text-align: left; font-family: inherit; font-size: 1rem;
+            cursor: pointer; transition: 0.2s; position: relative;
         }
+        .nav-btn:hover, .nav-btn.active { border-color: var(--green); background: rgba(0,255,0,0.1); padding-left: 20px; }
+        .nav-btn::before { content: '>'; position: absolute; left: 5px; opacity: 0; }
+        .nav-btn:hover::before, .nav-btn.active::before { opacity: 1; }
 
-        .nav-button {
-            background: transparent;
-            color: var(--main-green);
-            border: 1px solid var(--dark-green);
-            padding: 12px;
-            margin-bottom: 10px;
-            text-align: left;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1rem;
-            transition: 0.2s;
-            position: relative;
-            overflow: hidden;
+        /* Terminal Display */
+        .terminal { flex: 1; padding: 20px; display: flex; flex-direction: column; overflow-y: auto; }
+        
+        .output-area { flex: 1; overflow-y: auto; padding-bottom: 20px; scroll-behavior: smooth; }
+        .output-block { margin-bottom: 20px; animation: slideUp 0.3s ease-out; }
+        
+        .cmd-echo { color: var(--cyan); margin-bottom: 10px; }
+        .cmd-echo::before { content: 'guest@sail-os:~$ '; color: var(--green); }
+
+        /* Input Area */
+        .input-area { display: flex; align-items: center; border-top: 1px solid var(--green-dim); padding-top: 15px; }
+        .prompt { color: var(--green); margin-right: 10px; font-weight: bold; }
+        input[type="text"] {
+            flex: 1; background: transparent; border: none; color: var(--cyan);
+            font-family: 'Fira Code', monospace; font-size: 1.1rem; outline: none;
+            text-shadow: 0 0 5px var(--cyan);
         }
+        ::selection { background: var(--green); color: #000; }
 
-        .nav-button:hover, .nav-button.active {
-            background: rgba(0, 255, 65, 0.2);
-            border-color: var(--main-green);
-            box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.5);
-            padding-left: 20px;
-        }
+        /* Content Styling */
+        h1, h2, h3 { color: #fff; margin-bottom: 10px; text-transform: uppercase; }
+        p, li { color: #ccc; margin-bottom: 8px; line-height: 1.5; }
+        ul { list-style-type: square; margin-left: 20px; }
+        .highlight { color: var(--cyan); }
+        .danger { color: var(--red); }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        .box { border: 1px dashed var(--green-dim); padding: 15px; transition: 0.3s; background: rgba(0,0,0,0.5); }
+        .box:hover { border-style: solid; border-color: var(--green); box-shadow: 0 0 10px rgba(0,255,0,0.2); }
+        
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .tag { background: rgba(0,255,255,0.1); color: var(--cyan); padding: 3px 8px; border: 1px solid var(--cyan); font-size: 0.85rem; }
 
-        .nav-button::before {
-            content: '>';
-            position: absolute;
-            left: 5px;
-            opacity: 0;
-            transition: 0.2s;
-        }
+        a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid var(--cyan); }
+        a:hover { background: var(--cyan); color: #000; }
 
-        .nav-button:hover::before, .nav-button.active::before {
-            opacity: 1;
-        }
-
-        /* Terminal Window */
-        .main-content {
-            flex: 3;
-            background: var(--terminal-bg);
-            border: 1px solid var(--dark-green);
-            box-shadow: var(--glow);
-            display: flex;
-            flex-direction: column;
-            border-radius: 5px;
-            backdrop-filter: blur(5px);
-        }
-
-        .terminal-header {
-            background: #111;
-            padding: 10px 20px;
-            border-bottom: 1px solid var(--dark-green);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .terminal-body {
-            padding: 30px;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb { background: var(--dark-green); }
-        ::-webkit-scrollbar-thumb:hover { background: var(--main-green); }
-
-        /* Typography & Elements */
-        h1, h2, h3 { color: var(--main-green); text-transform: uppercase; margin-bottom: 15px; }
-        p, li { color: #ccc; margin-bottom: 10px; line-height: 1.6; }
-        strong { color: #fff; }
-        a { color: var(--main-green); text-decoration: none; border-bottom: 1px dotted var(--main-green); }
-        a:hover { background: var(--main-green); color: #000; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--green-dim); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--green); }
         
-        .accent { color: var(--alert-red); }
-        
-        /* Grid Layouts inside Terminal */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        
-        .box {
-            border: 1px solid #333;
-            padding: 20px;
-            background: rgba(0, 255, 65, 0.05);
-            transition: 0.3s;
-        }
-        .box:hover { border-color: var(--main-green); }
-
-        .tag-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;}
-        .tag { background: rgba(0, 255, 65, 0.1); border: 1px solid var(--dark-green); padding: 4px 8px; font-size: 0.85rem; }
-
-        /* Glitch Animation */
-        .glitch { position: relative; display: inline-block; font-size: 2rem; font-weight: bold; }
-        .glitch::before, .glitch::after {
-            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        }
-        .glitch::before { left: 2px; text-shadow: -1px 0 red; clip: rect(24px, 550px, 90px, 0); animation: glitch-anim-2 3s infinite linear alternate-reverse; }
-        .glitch::after { left: -2px; text-shadow: -1px 0 blue; clip: rect(85px, 550px, 140px, 0); animation: glitch-anim 2.5s infinite linear alternate-reverse; }
-        
-        @keyframes glitch-anim {
-            0% { clip: rect(13px, 9999px, 83px, 0); }
-            20% { clip: rect(98px, 9999px, 32px, 0); }
-            40% { clip: rect(19px, 9999px, 66px, 0); }
-            60% { clip: rect(55px, 9999px, 11px, 0); }
-            80% { clip: rect(33px, 9999px, 90px, 0); }
-            100% { clip: rect(78px, 9999px, 54px, 0); }
-        }
-
-        /* Typewriter text line */
-        .cmd-line { display: flex; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .prompt { color: var(--alert-red); margin-right: 10px; }
-        
-        /* Sections */
-        .content-section { display: none; animation: fadeIn 0.5s ease-in; }
-        .content-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Responsive */
-        @media (max-width: 900px) {
-            .container { flex-direction: column; }
-            .sidebar { max-width: 100%; }
-            .grid-2 { grid-template-columns: 1fr; }
+        /* Mobile adjustment */
+        @media (max-width: 800px) {
+            .window-content { flex-direction: column; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--green); padding: 10px; flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
+            .sys-info { display: none; }
+            .nav-btn { flex: 1; text-align: center; }
+            .grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-<body>
+<body class="crt">
 
     <canvas id="matrix"></canvas>
 
-    <div class="container">
-        <aside class="sidebar">
-            <div class="profile-pic">
-                <span style="opacity: 0.7;">[ IMAGE_NOT_FOUND ]</span>
-            </div>
-            <h2 class="glitch" data-text="A.SAIL" style="font-size: 1.5rem; text-align: center;">A.SAIL</h2>
-            <p style="text-align: center; margin-bottom: 20px; font-size: 0.9rem;">VAPT Analyst</p>
-            
-            <button class="nav-button active" onclick="loadSection('about', './whoami')">./whoami</button>
-            <button class="nav-button" onclick="loadSection('experience', 'cat /logs/experience.txt')">cat /experience</button>
-            <button class="nav-button" onclick="loadSection('skills', 'nmap -sV --skills target')">nmap --skills</button>
-            <button class="nav-button" onclick="loadSection('projects', 'ls -la /projects')">ls /projects</button>
-            <button class="nav-button" onclick="loadSection('education', 'cat /sys/education.log')">cat /education</button>
-            
-            <div style="margin-top: auto; border-top: 1px dashed var(--dark-green); padding-top: 15px;">
-                <p>CONTACT_LINKS:</p>
-                <a href="mailto:atharvasail106@gmail.com">[ Email ]</a><br>
-                <a href="https://github.com/ATHARVASAIL" target="_blank">[ GitHub ]</a><br>
-                <a href="https://www.linkedin.com/in/atharvasail" target="_blank">[ LinkedIn ]</a>
-            </div>
-        </aside>
-
-        <main class="main-content">
-            <div class="terminal-header">
-                <span>root@kali:~# bash</span>
-                <span>[ PID: 1337 ]</span>
-            </div>
-            <div class="terminal-body">
-                
-                <div class="cmd-line">
-                    <span class="prompt">root@kali:~#</span>
-                    <span id="typing-text">./whoami</span>
-                </div>
-
-                <div id="about" class="content-section active">
-                    <h1 class="glitch" data-text="ATHARVA SAIL">ATHARVA SAIL</h1>
-                    <p class="accent">>> STATUS: ACTIVE_SEEKING_OPPORTUNITIES</p>
-                    <br>
-                    <p>VAPT Analyst with more than 6 months of hands-on experience in Web, Mobile (Android & iOS), Network, API, and LLM security testing.</p>
-                    <p>Skilled in identifying and analyzing vulnerabilities based on OWASP Top 10 and industry practices. Experienced in working on real-world client environments and performing end-to-end security assessments with clear, actionable reports.</p>
-                </div>
-
-                <div id="experience" class="content-section">
-                    <h2>[ EXECUTION_LOGS: PROFESSIONAL EXPERIENCE ]</h2>
-                    <div class="box">
-                        <h3 style="color: #fff;">VAPT Junior Analyst Intern <span style="float: right; color: var(--main-green); font-size: 0.9rem;">Oct 2025 – May 2026</span></h3>
-                        <p class="accent">@ Anzen Technologies Pvt. Ltd. | Navi Mumbai</p>
-                        <br>
-                        <ul>
-                            <li>Conducted <strong>Web Application VAPT</strong> identifying SQLi, XSS, CSRF, SSRF, IDOR, and Business Logic Flaws.</li>
-                            <li>Performed <strong>Mobile Application Security Testing</strong> (Android & iOS) including static and dynamic analysis.</li>
-                            <li>Executed <strong>Network VAPT</strong> including port scanning, vulnerability scanning, and exploitation.</li>
-                            <li>Conducted <strong>API Security Testing</strong> using Burp Suite and Postman.</li>
-                            <li>Performed <strong>LLM Security Testing</strong> including Prompt Injection and Data Leakage.</li>
-                            <li>Worked on live client environments: Anand Rathi, MSE, and Aditya Birla Group.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div id="skills" class="content-section">
-                    <h2>[ SYSTEM_CAPABILITIES: SKILLS ]</h2>
-                    <div class="grid-2">
-                        <div class="box">
-                            <h3>Security Domains</h3>
-                            <div class="tag-container">
-                                <span class="tag">Web VAPT</span> <span class="tag">Mobile VAPT</span>
-                                <span class="tag">Network Security</span> <span class="tag">API Security</span>
-                                <span class="tag">LLM Security</span>
-                            </div>
-                        </div>
-                        <div class="box">
-                            <h3>Tools Matrix</h3>
-                            <div class="tag-container">
-                                <span class="tag">Burp Suite</span> <span class="tag">Nmap</span>
-                                <span class="tag">Wireshark</span> <span class="tag">Metasploit</span>
-                                <span class="tag">MobSF</span> <span class="tag">Frida</span>
-                                <span class="tag">JADX</span> <span class="tag">OWASP ZAP</span>
-                            </div>
-                        </div>
-                        <div class="box">
-                            <h3>Vulnerabilities</h3>
-                            <p>SQLi, XSS, CSRF, SSRF, IDOR, Path Traversal, Business Logic Flaws.</p>
-                            <p class="accent">>> Frameworks: OWASP Top 10, SANS Top 25</p>
-                        </div>
-                        <div class="box">
-                            <h3>Programming & Dev</h3>
-                            <div class="tag-container">
-                                <span class="tag">Python</span> <span class="tag">Java</span>
-                                <span class="tag">C</span> <span class="tag">Solidity</span>
-                                <span class="tag">Flask</span> <span class="tag">MySQL</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="projects" class="content-section">
-                    <h2>[ DEPLOYED_ASSETS: PROJECTS ]</h2>
-                    <div class="grid-2">
-                        <div class="box">
-                            <h3 style="color: #fff;">WebGuard Scanner <span class="accent">[2024]</span></h3>
-                            <p>Advanced Web Vulnerability Scanner</p>
-                            <ul>
-                                <li>Developed a Python-based scanner detecting SQLi, XSS, CSRF, SSRF.</li>
-                                <li>Generated automated PDF & JSON reports.</li>
-                                <li>Achieved detection accuracy comparable to Burp Suite.</li>
-                            </ul>
-                        </div>
-                        <div class="box">
-                            <h3 style="color: #fff;">Evidence Management <span class="accent">[2023]</span></h3>
-                            <p>Blockchain-Based Storage System</p>
-                            <ul>
-                                <li>Built a secure evidence storage system using Solidity, IPFS, and ReactJS.</li>
-                                <li>Ensured tamper-proof data integrity and decentralized storage.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="education" class="content-section">
-                    <h2>[ CORE_MEMORY: EDUCATION & CERTS ]</h2>
-                    <div class="box" style="margin-bottom: 20px;">
-                        <h3 style="color: #fff;">B.E. Computer Science <span style="float: right; color: var(--main-green); font-size: 0.9rem;">2021 – 2025</span></h3>
-                        <p>IoT & Cybersecurity with Blockchain</p>
-                        <p class="accent">>> Lokmanya Tilak College of Engineering | CGPA: 9.06</p>
-                    </div>
-
-                    <h3>CERTIFICATIONS_AND_TRAINING:</h3>
-                    <ul>
-                        <li><strong>Certified Ethical Hacker (CEH)</strong> – EC-Council</li>
-                        <li>CyberOps & Professional Edge Program (2025)</li>
-                        <li>Cyber Security Internship – Prodigy Infotech (2024)</li>
-                        <li>NPTEL Ethical Hacking Certification (2023)</li>
-                        <li>Completed 50+ labs on <strong>TryHackMe, HackTheBox & PortSwigger</strong></li>
-                    </ul>
-                </div>
-
-            </div>
-        </main>
+    <div id="boot-screen">
+        <div id="boot-text"></div>
     </div>
 
-    <script>
-        // --- 1. Navigation & Typing Logic ---
-        function loadSection(sectionId, commandText) {
-            // Update active button state
-            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+    <div class="os-container" id="os">
+        <div class="window" id="terminal-window">
+            <div class="title-bar" id="drag-handle">
+                <span>root@sail-core ~ /bin/bash</span>
+                <span>[X]</span>
+            </div>
+            <div class="window-content">
+                
+                <aside class="sidebar">
+                    <div class="sys-info">
+                        <h2>A.SAIL</h2>
+                        <span class="highlight">VAPT Analyst</span><br>
+                        <span style="font-size: 0.8rem; color: #666;">SYS_STATUS: ONLINE</span>
+                    </div>
+                    <p style="color: #666; font-size: 0.8rem;">> EXECUTABLES</p>
+                    <button class="nav-btn" onclick="executeCmd('whoami')">./whoami</button>
+                    <button class="nav-btn" onclick="executeCmd('experience')">./experience</button>
+                    <button class="nav-btn" onclick="executeCmd('skills')">./skills</button>
+                    <button class="nav-btn" onclick="executeCmd('projects')">./projects</button>
+                    <button class="nav-btn" onclick="executeCmd('education')">./education</button>
+                    <button class="nav-btn" onclick="executeCmd('contact')">./contact</button>
+                    <button class="nav-btn danger" onclick="executeCmd('clear')" style="margin-top: auto;">clear_logs</button>
+                </aside>
 
-            // Hide all sections
-            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
-            
-            // Type the command
-            const typingElement = document.getElementById('typing-text');
-            typingElement.textContent = '';
-            let i = 0;
-            
-            function typeWriter() {
-                if (i < commandText.length) {
-                    typingElement.textContent += commandText.charAt(i);
-                    i++;
-                    setTimeout(typeWriter, 30); // Speed of typing
-                } else {
-                    // Show section after typing finishes
-                    setTimeout(() => {
-                        document.getElementById(sectionId).classList.add('active');
-                    }, 200);
+                <main class="terminal">
+                    <div class="output-area" id="output">
+                        </div>
+                    
+                    <div class="input-area">
+                        <span class="prompt">guest@sail-os:~$</span>
+                        <input type="text" id="cli" autocomplete="off" spellcheck="false" autofocus>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <template id="tpl-welcome">
+        <h2>System Initialized.</h2>
+        <p>Welcome to SAIL-OS v2.0.</p>
+        <p>Type <span class="highlight">'help'</span> to see available commands, or click the executable files in the sidebar.</p>
+    </template>
+
+    <template id="tpl-help">
+        <h3>AVAILABLE COMMANDS:</h3>
+        <div class="grid">
+            <div>
+                <ul>
+                    <li><span class="highlight">whoami</span> - Display summary</li>
+                    <li><span class="highlight">experience</span> - Show work history</li>
+                    <li><span class="highlight">skills</span> - Display technical arsenal</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li><span class="highlight">projects</span> - View developed tools</li>
+                    <li><span class="highlight">education</span> - Show academic records</li>
+                    <li><span class="highlight">clear</span> - Clear terminal screen</li>
+                </ul>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-whoami">
+        <h1>Atharva Sail</h1>
+        <p class="highlight">>> VAPT Analyst & Security Researcher</p>
+        <br>
+        <p>VAPT Analyst with more than 6 months of hands-on experience in Web, Mobile (Android & iOS), Network, API, and LLM security testing.</p>
+        <p>Skilled in identifying and analyzing vulnerabilities based on OWASP Top 10 and industry practices. Experienced in working on real-world client environments and performing end-to-end security assessments with clear, actionable reports.</p>
+    </template>
+
+    <template id="tpl-experience">
+        <h3>[ ACCESSING LOGS: EXPERIENCE ]</h3>
+        <div class="box">
+            <h2 class="highlight">VAPT Junior Analyst Intern</h2>
+            <p><strong>Anzen Technologies Pvt. Ltd. | Navi Mumbai</strong> | Oct 2025 – May 2026</p>
+            <br>
+            <ul>
+                <li>Conducted <strong>Web Application VAPT</strong> identifying vulnerabilities like SQL Injection, XSS, CSRF, SSRF, IDOR.</li>
+                <li>Performed <strong>Mobile Application Security Testing</strong> (Android & iOS) including static and dynamic analysis using tools and manual techniques.</li>
+                <li>Executed <strong>Network VAPT</strong> including port scanning, vulnerability scanning, and exploitation.</li>
+                <li>Conducted <strong>API Security Testing</strong> using Burp Suite and Postman.</li>
+                <li>Performed <strong>LLM Security Testing</strong> including Prompt Injection, Data Leakage, and Model Manipulation.</li>
+                <li>Worked on live client environments including <strong>Anand Rathi, MSE, and Aditya Birla Group</strong>.</li>
+            </ul>
+        </div>
+    </template>
+
+    <template id="tpl-skills">
+        <h3>[ SYSTEM_CAPABILITIES ]</h3>
+        <div class="grid">
+            <div class="box">
+                <p class="highlight">SECURITY DOMAINS</p>
+                <div class="tags">
+                    <span class="tag">Web VAPT</span> <span class="tag">Mobile VAPT</span> <span class="tag">Network Sec</span>
+                    <span class="tag">API Security</span> <span class="tag">LLM Security</span>
+                </div>
+            </div>
+            <div class="box">
+                <p class="highlight">TOOLS & FRAMEWORKS</p>
+                <div class="tags">
+                    <span class="tag">Burp Suite</span> <span class="tag">Nmap</span> <span class="tag">Wireshark</span>
+                    <span class="tag">Metasploit</span> <span class="tag">MobSF</span> <span class="tag">Frida</span>
+                    <span class="tag">JADX</span> <span class="tag">Postman</span> <span class="tag">OWASP ZAP</span>
+                </div>
+            </div>
+            <div class="box">
+                <p class="highlight">KNOWLEDGE BASE</p>
+                <ul>
+                    <li>OWASP Top 10, SANS Top 25</li>
+                    <li>SQLi, XSS, CSRF, SSRF, IDOR, Path Traversal</li>
+                    <li>Secure Coding Practices</li>
+                </ul>
+            </div>
+            <div class="box">
+                <p class="highlight">PROGRAMMING</p>
+                <div class="tags">
+                    <span class="tag">Python</span> <span class="tag">Java</span> <span class="tag">C</span>
+                    <span class="tag">Solidity</span> <span class="tag">Flask</span> <span class="tag">MySQL</span>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-projects">
+        <h3>[ DEPLOYED ASSETS ]</h3>
+        <div class="grid">
+            <div class="box">
+                <h2 class="highlight">WebGuard Scanner <span style="font-size: 0.8rem; color: #fff;">(2024)</span></h2>
+                <p>Advanced Web Vulnerability Scanner</p>
+                <ul>
+                    <li>Developed a Python-based scanner detecting SQLi, XSS, CSRF, SSRF, and Directory Traversal.</li>
+                    <li>Generated automated PDF & JSON reports.</li>
+                    <li>Achieved detection accuracy comparable to Burp Suite.</li>
+                </ul>
+            </div>
+            <div class="box">
+                <h2 class="highlight">Evidence Management <span style="font-size: 0.8rem; color: #fff;">(2023)</span></h2>
+                <p>Blockchain-Based Storage</p>
+                <ul>
+                    <li>Built secure storage system using Solidity, IPFS, and ReactJS.</li>
+                    <li>Ensured tamper-proof data integrity.</li>
+                </ul>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-education">
+        <h3>[ ACADEMIC RECORDS ]</h3>
+        <div class="box" style="margin-bottom: 15px;">
+            <h2 class="highlight">B.E. Computer Science</h2>
+            <p>IoT & Cybersecurity with Blockchain | CGPA: <strong>9.06</strong></p>
+            <p>Lokmanya Tilak College of Engineering (2021 – 2025)</p>
+        </div>
+        <div class="box">
+            <h2 class="highlight">Certifications & Training</h2>
+            <ul>
+                <li><strong>Certified Ethical Hacker (CEH)</strong> – EC-Council</li>
+                <li>CyberOps & Professional Edge Program (2025)</li>
+                <li>Cyber Security Internship – Prodigy Infotech (2024)</li>
+                <li>NPTEL Ethical Hacking Certification (2023)</li>
+                <li>Completed 50+ labs on TryHackMe, HackTheBox & PortSwigger</li>
+            </ul>
+        </div>
+    </template>
+
+    <template id="tpl-contact">
+        <h3>[ SECURE_COMMS_CHANNEL ]</h3>
+        <div class="box">
+            <p>Email: <a href="mailto:atharvasail106@gmail.com">atharvasail106@gmail.com</a></p>
+            <p>Phone: +91 9372789790</p>
+            <br>
+            <p>GitHub: <a href="https://github.com/ATHARVASAIL" target="_blank">github.com/ATHARVASAIL</a></p>
+            <p>LinkedIn: <a href="https://www.linkedin.com/in/atharvasail" target="_blank">linkedin.com/in/atharvasail</a></p>
+        </div>
+    </template>
+
+    <template id="tpl-error">
+        <p class="danger">bash: command not found. Type 'help' for available commands.</p>
+    </template>
+
+    <script>
+        // --- 1. Boot Sequence Logic ---
+        const bootLines = [
+            "Initializing SAIL kernel...",
+            "Loading drivers [OK]",
+            "Mounting file systems [OK]",
+            "Starting networking subsystem...",
+            "Establishing secure connection to mainframe [OK]",
+            "Bypassing firewall [OK]",
+            "Decrypting user profile...",
+            "Welcome, Admin."
+        ];
+        
+        const bootScreen = document.getElementById('boot-text');
+        const osContainer = document.getElementById('os');
+        let bootDelay = 0;
+
+        bootLines.forEach((line, index) => {
+            setTimeout(() => {
+                bootScreen.innerHTML += `<div>${line}</div>`;
+            }, bootDelay);
+            bootDelay += Math.random() * 300 + 200; // Random delay for realism
+        });
+
+        setTimeout(() => {
+            document.getElementById('boot-screen').style.display = 'none';
+            osContainer.style.opacity = '1';
+            document.getElementById('cli').focus();
+            printOutput('welcome', false);
+        }, bootDelay + 500);
+
+
+        // --- 2. Interactive Terminal Logic ---
+        const cli = document.getElementById('cli');
+        const outputArea = document.getElementById('output');
+
+        // Force focus on input when clicking terminal
+        document.querySelector('.terminal').addEventListener('click', () => cli.focus());
+
+        cli.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const cmd = this.value.trim().toLowerCase();
+                if (cmd) {
+                    executeCmd(cmd, true);
                 }
+                this.value = ''; // clear input
             }
-            typeWriter();
+        });
+
+        function executeCmd(cmd, fromTyping = false) {
+            // Update active state on sidebar
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            const matchingBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.textContent.includes(cmd));
+            if(matchingBtn) matchingBtn.classList.add('active');
+
+            if (cmd === 'clear') {
+                outputArea.innerHTML = '';
+                return;
+            }
+
+            // Print the command that was typed/clicked
+            const echo = document.createElement('div');
+            echo.className = 'cmd-echo';
+            echo.textContent = cmd;
+            outputArea.appendChild(echo);
+
+            // Fetch template
+            const template = document.getElementById(`tpl-${cmd}`);
+            
+            if (template) {
+                const clone = template.content.cloneNode(true);
+                const block = document.createElement('div');
+                block.className = 'output-block';
+                block.appendChild(clone);
+                outputArea.appendChild(block);
+            } else {
+                // Error handling for unknown commands
+                const errorTpl = document.getElementById('tpl-error').content.cloneNode(true);
+                const block = document.createElement('div');
+                block.className = 'output-block';
+                block.appendChild(errorTpl);
+                outputArea.appendChild(block);
+            }
+
+            // Scroll to bottom
+            outputArea.scrollTop = outputArea.scrollHeight;
         }
 
-        // --- 2. Matrix Digital Rain Logic ---
+        function printOutput(templateId, showCmd = true) {
+            executeCmd(templateId, showCmd);
+        }
+
+        // --- 3. Interactive Matrix Rain (Dodges Mouse) ---
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
-
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%""\'#&_(),.;:?!\\|{}<>[]^~';
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%""\'#&_(),.;:?!\\|{}<>[]^~';
         const fontSize = 14;
         const columns = canvas.width / fontSize;
-        const drops = [];
-
-        for (let x = 0; x < columns; x++) {
-            drops[x] = 1;
-        }
+        const drops = Array.from({length: columns}, () => 1);
+        
+        // Mouse tracking for matrix interaction
+        let mouseX = -1000;
+        let mouseY = -1000;
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        document.addEventListener('mouseleave', () => { mouseX = -1000; mouseY = -1000; });
 
         function drawMatrix() {
-            ctx.fillStyle = 'rgba(5, 5, 5, 0.05)'; // Fades the tail
+            ctx.fillStyle = 'rgba(2, 2, 2, 0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#00ff41'; // Bright green text
-            ctx.font = fontSize + 'px monospace';
+            ctx.font = fontSize + 'px "Fira Code", monospace';
 
             for (let i = 0; i < drops.length; i++) {
-                const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                // Check distance to mouse
+                const dropX = i * fontSize;
+                const dropY = drops[i] * fontSize;
+                const dist = Math.sqrt(Math.pow(mouseX - dropX, 2) + Math.pow(mouseY - dropY, 2));
 
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
+                if (dist < 100) {
+                    // Mouse repel effect - dim or scatter the text
+                    ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
+                } else {
+                    ctx.fillStyle = '#0f0'; // Bright green
                 }
+
+                const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                ctx.fillText(text, dropX, dropY);
+
+                if (dropY > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             }
         }
+        setInterval(drawMatrix, 40);
 
-        setInterval(drawMatrix, 35); // Speed of rain
-
-        // Resize canvas on window resize
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         });
+
+        // --- 4. Draggable Window Logic ---
+        const win = document.getElementById('terminal-window');
+        const handle = document.getElementById('drag-handle');
+        let isDragging = false, offsetX, offsetY;
+
+        handle.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            offsetX = e.clientX - win.getBoundingClientRect().left;
+            offsetY = e.clientY - win.getBoundingClientRect().top;
+            win.style.transition = 'none'; // remove transition for smooth drag
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            // Center the element based on mouse position minus the initial click offset
+            const x = e.clientX - offsetX;
+            const y = e.clientY - offsetY;
+            
+            // Override the flexbox centering by using fixed positioning
+            win.style.position = 'fixed';
+            win.style.left = `${x}px`;
+            win.style.top = `${y}px`;
+            win.style.transform = 'none'; // remove flexbox transform
+            win.style.margin = '0';
+        });
+
+        document.addEventListener('mouseup', () => { isDragging = false; });
+
     </script>
 </body>
 </html>
