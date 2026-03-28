@@ -64,9 +64,11 @@
             display: flex; justify-content: space-between; cursor: grab; user-select: none;
             flex-shrink: 0;
         }
+        .title-bar:active { cursor: grabbing; }
 
         .window-content { display: flex; flex: 1; overflow: hidden; }
 
+        /* Sidebar Navigation */
         .sidebar {
             width: 250px; border-right: 1px solid var(--green-dim); padding: 15px;
             display: flex; flex-direction: column; gap: 10px; background: rgba(0,255,0,0.02);
@@ -81,7 +83,10 @@
             cursor: pointer; transition: 0.2s; position: relative; white-space: nowrap;
         }
         .nav-btn:hover, .nav-btn.active { border-color: var(--green); background: rgba(0,255,0,0.1); padding-left: 20px; }
+        .nav-btn::before { content: '>'; position: absolute; left: 5px; opacity: 0; }
+        .nav-btn:hover::before, .nav-btn.active::before { opacity: 1; }
 
+        /* Terminal Display */
         .terminal { flex: 1; padding: 20px; display: flex; flex-direction: column; overflow: hidden; cursor: text;}
         .output-area { flex: 1; overflow-y: auto; padding-bottom: 20px; scroll-behavior: smooth; }
         .output-block { margin-bottom: 20px; animation: slideUp 0.3s ease-out; }
@@ -89,6 +94,7 @@
         .cmd-echo { color: var(--cyan); margin-bottom: 10px; }
         .cmd-echo::before { content: 'guest@sail-os:~$ '; color: var(--green); }
 
+        /* Input Area */
         .input-area { display: flex; align-items: center; border-top: 1px solid var(--green-dim); padding-top: 15px; flex-shrink: 0;}
         .prompt { color: var(--green); margin-right: 10px; font-weight: bold; }
         input[type="text"] {
@@ -96,10 +102,7 @@
             font-family: 'Fira Code', monospace; font-size: 16px; 
             outline: none; text-shadow: 0 0 5px var(--cyan);
         }
-
-        /* Animations */
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes blink-red { 0% { opacity: 0.2; } 50% { opacity: 1; } 100% { opacity: 0.2; } }
+        ::selection { background: var(--green); color: #000; }
 
         /* Content Styling */
         h1, h2, h3 { color: #fff; margin-bottom: 10px; text-transform: uppercase; font-size: 1.2rem; }
@@ -107,14 +110,31 @@
         ul { list-style-type: square; margin-left: 20px; }
         .highlight { color: var(--cyan); }
         .danger { color: var(--red); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
-        .box { border: 1px dashed var(--green-dim); padding: 15px; background: rgba(0,0,0,0.5); }
-        a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid var(--cyan); }
         
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        .box { border: 1px dashed var(--green-dim); padding: 15px; transition: 0.3s; background: rgba(0,0,0,0.5); }
+        .box:hover { border-style: solid; border-color: var(--green); box-shadow: 0 0 10px rgba(0,255,0,0.2); }
+        
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .tag { background: rgba(0,255,255,0.1); color: var(--cyan); padding: 3px 8px; border: 1px solid var(--cyan); font-size: 0.85rem; }
+
+        a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid var(--cyan); }
+        a:hover { background: var(--cyan); color: #000; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes blink-red { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--green-dim); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--green); }
+        
+        /* Mobile Responsive */
         @media (max-width: 800px) {
-            .window { width: 100%; height: 100dvh; position: static !important; transform: none !important; margin: 0 !important; border: none; }
+            .window { width: 100%; height: 100dvh; position: static !important; transform: none !important; margin: 0 !important; border: none; border-radius: 0; }
             .window-content { flex-direction: column; }
-            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--green); flex-direction: row; overflow-x: auto; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--green); flex-direction: row; overflow-x: auto; scrollbar-width: none; }
             .sys-info { display: none; }
             .grid { grid-template-columns: 1fr; }
         }
@@ -139,12 +159,13 @@
                     <div class="sys-info">
                         <h2>A.SAIL</h2>
                         <span class="highlight">VAPT Analyst</span><br>
+                        <span style="font-size: 0.8rem; color: #666;">SYS_STATUS: ONLINE</span>
                     </div>
                     <button class="nav-btn" onclick="executeCmd('whoami')">whoami</button>
                     <button class="nav-btn" onclick="executeCmd('experience')">experience</button>
                     <button class="nav-btn" onclick="executeCmd('skills')">skills</button>
                     <button class="nav-btn" onclick="executeCmd('projects')">projects</button>
-                    <button class="nav-btn" onclick="executeCmd('sudo')">sudo</button>
+                    <button class="nav-btn" onclick="executeCmd('education')">education</button>
                     <button class="nav-btn" onclick="executeCmd('contact')">contact</button>
                     <button class="nav-btn danger" onclick="executeCmd('clear')">clear</button>
                 </aside>
@@ -162,25 +183,81 @@
 
     <template id="tpl-welcome">
         <h2>System Initialized.</h2>
-        <p>Welcome to SAIL-OS v2.0. Type <span class="highlight">'help'</span> for commands.</p>
+        <p>Welcome to SAIL-OS v2.0.</p>
+        <p>Type <span class="highlight">'help'</span> to see available commands.</p>
+    </template>
+
+    <template id="tpl-help">
+        <h3>AVAILABLE COMMANDS:</h3>
+        <div class="grid">
+            <div>
+                <ul>
+                    <li><span class="highlight">whoami</span> - Display summary</li>
+                    <li><span class="highlight">experience</span> - Show work history</li>
+                    <li><span class="highlight">skills</span> - Technical arsenal</li>
+                    <li><span class="highlight">ls</span>, <span class="highlight">cat</span> - File system</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li><span class="highlight">nmap</span>, <span class="highlight">exploit</span> - Sec Tools</li>
+                    <li><span class="highlight">sudo</span> - Root access</li>
+                    <li><span class="highlight">clear</span> - Reset terminal</li>
+                </ul>
+            </div>
+        </div>
     </template>
 
     <template id="tpl-whoami">
         <h1>Atharva Sail</h1>
         <p class="highlight">>> VAPT Analyst & Security Researcher</p>
-        <p>Expertise in Web, Mobile, and Network VAPT. 6+ months experience at Anzen Technologies.</p>
+        <p>Specialized in Web, Mobile, and Network VAPT with 6+ months experience at Anzen Technologies.</p>
     </template>
 
     <template id="tpl-experience">
-        <h3>[ WORK_LOGS ]</h3>
+        <h3>[ ACCESSING LOGS: EXPERIENCE ]</h3>
         <div class="box">
-            <h2 class="highlight">Junior VAPT Intern</h2>
-            <p>Anzen Technologies | Oct 2025 - May 2026</p>
+            <h2 class="highlight">VAPT Junior Analyst Intern</h2>
+            <p><strong>Anzen Technologies</strong> | Oct 2025 – May 2026</p>
             <ul>
-                <li>Secured assets for Aditya Birla, Anand Rathi, MSE.</li>
-                <li>API & LLM Security Testing.</li>
+                <li>Web/Mobile VAPT for Anand Rathi, Aditya Birla.</li>
+                <li>API & LLM Security Research.</li>
             </ul>
         </div>
+    </template>
+
+    <template id="tpl-skills">
+        <h3>[ SYSTEM_CAPABILITIES ]</h3>
+        <div class="grid">
+            <div class="box"><p class="highlight">DOMAINS</p><p>Web, Mobile, Network, API, LLM Sec</p></div>
+            <div class="box"><p class="highlight">TOOLS</p><p>Burp, Nmap, Frida, JADX, Nessus</p></div>
+        </div>
+    </template>
+
+    <template id="tpl-ls">
+        <p>Directory of /home/guest/portfolio</p>
+        <div style="display: flex; gap: 20px; color: #5555ff;">
+            <span>drwxr-xr-x projects/</span>
+            <span>-rw-r--r-- README.md</span>
+        </div>
+    </template>
+
+    <template id="tpl-cat">
+        <p class="highlight">Reading README.md...</p>
+        <p style="color: #888;">Atharva Sail - Cybersecurity Portfolio. Secure OS Interface v2.0.</p>
+    </template>
+
+    <template id="tpl-nmap">
+        <p class="highlight">Starting Nmap scan report for atharvasail.github.io</p>
+        <p>PORT STATE SERVICE</p>
+        <p>80/tcp open http</p>
+        <p>443/tcp open https</p>
+    </template>
+
+    <template id="tpl-exploit">
+        <p class="danger">Targeting local buffer...</p>
+        <p>Sending payload... [####################] 100%</p>
+        <p class="highlight">[*] Exploit completed. No session created.</p>
     </template>
 
     <template id="tpl-sudo">
@@ -193,13 +270,6 @@
         </div>
     </template>
 
-    <template id="tpl-nmap">
-        <p class="highlight">Nmap 7.92 scan report for atharvasail.github.io</p>
-        <p>PORT STATE SERVICE</p>
-        <p>80/tcp open http</p>
-        <p>443/tcp open https</p>
-    </template>
-
     <template id="tpl-contact">
         <h3>[ CONTACT ]</h3>
         <p>Email: <a href="mailto:atharvasail106@gmail.com">atharvasail106@gmail.com</a></p>
@@ -207,22 +277,22 @@
     </template>
 
     <script>
-        // --- 1. Boot Logic ---
-        const bootLines = ["Init kernel...", "Loading drivers [OK]", "Establishing Link [OK]", "Welcome, Admin."];
+        // 1. Boot Logic
+        const bootLines = ["Init SAIL kernel...", "Loading drivers [OK]", "Mounting FS [OK]", "Welcome, Admin."];
         const bootScreen = document.getElementById('boot-text');
         let bootDelay = 0;
         bootLines.forEach(l => {
             setTimeout(() => { bootScreen.innerHTML += `<div>${l}</div>`; }, bootDelay);
-            bootDelay += 400;
+            bootDelay += 350;
         });
         setTimeout(() => {
             document.getElementById('boot-screen').style.display = 'none';
             document.getElementById('os').style.opacity = '1';
-            document.getElementById('cli').focus();
+            if(window.innerWidth > 800) document.getElementById('cli').focus();
             executeCmd('welcome');
-        }, bootDelay + 500);
+        }, bootDelay + 300);
 
-        // --- 2. Terminal Logic ---
+        // 2. Terminal Logic
         const cli = document.getElementById('cli');
         const outputArea = document.getElementById('output');
         let isLocked = false;
@@ -238,7 +308,6 @@
 
         function executeCmd(cmd) {
             if (cmd === 'clear') { outputArea.innerHTML = ''; return; }
-
             const echo = document.createElement('div');
             echo.className = 'cmd-echo';
             echo.textContent = cmd;
@@ -271,15 +340,12 @@
                     mainText.style.color = 'var(--cyan)';
                     mainText.textContent = "JUST KIDDING!";
                     subText.style.color = 'var(--green)';
-                    subText.textContent = "Access Denied: You are not in the sudoers file. Relax, Admin.";
+                    subText.textContent = "Relax, Admin. This incident will not be reported.";
                     progress.style.display = 'none';
                     isLocked = false;
                     cli.focus();
                 }, 10000);
 
-            } else if (cmd === 'help') {
-                block.innerHTML = `<p>Commands: <span class="highlight">whoami, experience, skills, projects, nmap, sudo, contact, clear</span></p>`;
-                outputArea.appendChild(block);
             } else {
                 const template = document.getElementById(`tpl-${cmd}`);
                 if (template) block.appendChild(template.content.cloneNode(true));
@@ -289,7 +355,7 @@
             outputArea.scrollTop = outputArea.scrollHeight;
         }
 
-        // --- 3. Matrix Rain ---
+        // 3. Matrix Rain
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -308,6 +374,24 @@
             }
         }
         setInterval(drawMatrix, 40);
+
+        // 4. Draggable
+        const win = document.getElementById('terminal-window');
+        const handle = document.getElementById('drag-handle');
+        let isDragging = false, offsetX, offsetY;
+        handle.addEventListener('mousedown', (e) => {
+            if(window.innerWidth <= 800) return;
+            isDragging = true;
+            offsetX = e.clientX - win.getBoundingClientRect().left;
+            offsetY = e.clientY - win.getBoundingClientRect().top;
+            win.style.transition = 'none';
+        });
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging || window.innerWidth <= 800) return;
+            win.style.left = `${e.clientX - offsetX}px`; win.style.top = `${e.clientY - offsetY}px`;
+            win.style.position = 'fixed'; win.style.transform = 'none'; win.style.margin = '0';
+        });
+        document.addEventListener('mouseup', () => isDragging = false);
     </script>
 </body>
-</html>s
+</html>
