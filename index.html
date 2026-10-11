@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FAFAFA">
+<meta property="og:title" content="Atharva Sail · VAPT Analyst">
+<meta property="og:description" content="VAPT analyst testing web, mobile, network, API and LLM applications. Builder of Watcher, GreySh3ll, Kompromap and VISION.">
+<meta property="og:url" content="https://atharvasail.github.io/">
+<link rel="canonical" href="https://atharvasail.github.io/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%234F46E5%22/%3E%3Ctext x=%2216%22 y=%2221%22 font-family=%22Arial%22 font-weight=%22700%22 font-size=%2213%22 fill=%22%23FFFFFF%22 text-anchor=%22middle%22%3EAS%3C/text%3E%3C/svg%3E">
+<title>Atharva Sail</title>
+<meta name="description" content="Atharva Sail is a VAPT analyst who tests web, mobile, network, API and LLM applications and builds open-source security tools.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: light, airy page (max 1120px). Split hero with a finding-card visual, stats band, 3-col project grid, timeline, skill cards, split contact. */
+:root{
+  color-scheme:light;
+  --paper:#FAFAFA; --card:#FFFFFF; --ink:#16181D; --body:#454B57; --soft:#5E6573; --line:#E7E8EC; --line-2:#D9DBE2;
+  --accent:#4F46E5; --accent-ink:#3730A3; --accent-tint:#EEF0FF; --accent-tint-2:#E0E3FF;
+  --crit:#D92D20; --high:#C4570A; --med:#A16207; --ok:#067647;
+}
+html{scroll-behavior:smooth; scroll-padding-top:84px}
+body{background:var(--paper); color:var(--ink); -webkit-font-smoothing:antialiased; overflow-x:hidden}
+h1,h2,h3{text-wrap:balance}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:8px}
+.bg-hero{position:absolute; inset:0 0 auto; height:760px; z-index:-1; pointer-events:none;
+  background:radial-gradient(640px 380px at 78% 18%, rgba(79,70,229,.13), transparent 70%), radial-gradient(520px 320px at 8% 0%, rgba(79,70,229,.07), transparent 70%)}
+.bg-hero::after{content:""; position:absolute; inset:0; background-image:radial-gradient(rgba(22,24,29,.09) 1px, transparent 1px); background-size:22px 22px;
+  mask-image:linear-gradient(180deg,#000 0%,transparent 85%); -webkit-mask-image:linear-gradient(180deg,#000 0%,transparent 85%)}
+.shadow-soft{box-shadow:0 1px 2px rgba(16,24,40,.04), 0 12px 32px -8px rgba(16,24,40,.10)}
+.shadow-lift{box-shadow:0 1px 2px rgba(16,24,40,.05), 0 24px 48px -12px rgba(16,24,40,.18)}
+.card-hover{transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s, border-color .35s}
+.card-hover:hover{transform:translateY(-4px); border-color:var(--line-2); box-shadow:0 1px 2px rgba(16,24,40,.05), 0 24px 48px -16px rgba(79,70,229,.25)}
+.card-hover:hover .shot svg{transform:scale(1.04)}
+.shot svg{transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.card-hover:hover .arrow{transform:translateX(4px)}
+.arrow{transition:transform .25s}
+.float-a{animation:floatA 6s ease-in-out infinite} .float-b{animation:floatB 7s ease-in-out infinite}
+@keyframes floatA{50%{transform:translateY(-6px)}} @keyframes floatB{50%{transform:translateY(5px)}}
+.pulse{box-shadow:0 0 0 0 rgba(6,118,71,.45); animation:pulse 2.4s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 7px rgba(6,118,71,0)}100%{box-shadow:0 0 0 0 rgba(6,118,71,0)}}
+.timeline::before{content:""; position:absolute; left:11px; top:10px; bottom:10px; width:2px; background:linear-gradient(var(--accent), var(--line) 70%)}
+/* svg preview palette */
+.pv-panel{fill:#FFFFFF} .pv-panel2{fill:#F3F4F8} .pv-stroke{stroke:#D9DBE2; fill:none} .pv-ink{fill:#C9CCD6} .pv-dim{fill:#E4E6EC}
+.pv-acc{fill:#4F46E5} .pv-acc-s{stroke:#4F46E5; fill:none} .pv-crit{fill:#F04438} .pv-high{fill:#F79009} .pv-med{fill:#EAAA08} .pv-ok{fill:#12B76A}
+.pv-text{fill:#5E6573; font-family:"JetBrains Mono",monospace; font-size:9px} .pv-text-acc{fill:#3730A3; font-family:"JetBrains Mono",monospace; font-size:9px}
+.reveal{transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1)}
+.reveal.pre{opacity:0; transform:translateY(16px)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} .reveal,.card-hover,.shot svg,.arrow{transition:none} .reveal.pre{opacity:1; transform:none} .float-a,.float-b,.pulse{animation:none}}
+</style>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        paper:'#FAFAFA', card:'#FFFFFF', ink:'#16181D', body:'#454B57', soft:'#5E6573', line:'#E7E8EC', line2:'#D9DBE2',
+        accent:{ DEFAULT:'#4F46E5', ink:'#3730A3', tint:'#EEF0FF', tint2:'#E0E3FF' },
+        crit:'#D92D20', high:'#C4570A', med:'#A16207', ok:'#067647'
+      },
+      fontFamily:{ sans:['Plus Jakarta Sans','Segoe UI','system-ui','-apple-system','Helvetica Neue','Arial','sans-serif'], mono:['JetBrains Mono','ui-monospace','Consolas','monospace'] },
+      maxWidth:{ page:'1120px' }
+    }
+  }
+}
+</script>
+</head>
+<body>
+<div class="bg-hero" aria-hidden="true"></div>
+
+<!-- Header -->
+<header id="top" class="sticky z-40 border-b border-transparent transition-colors duration-300" style="top:env(safe-area-inset-top,0px)" data-header>
+  <div class="mx-auto flex h-16 max-w-page items-center justify-between gap-4 px-4 sm:h-[72px] sm:px-6 lg:px-8">
+    <a href="#top" class="inline-flex min-h-[44px] items-center gap-2.5 font-bold tracking-tight text-ink">
+      <span class="grid h-9 w-9 place-items-center rounded-xl bg-accent font-mono text-[13px] font-medium text-white">AS</span>
+      <span>Atharva Sail</span>
+    </a>
+    <nav aria-label="Main" class="hidden items-center gap-1 md:flex">
+      <a href="#work" data-nav="work" class="inline-flex min-h-[44px] items-center rounded-lg px-3 text-[15px] font-medium text-soft transition-colors hover:text-ink aria-[current=true]:text-accent-ink">Work</a>
+      <a href="#experience" data-nav="experience" class="inline-flex min-h-[44px] items-center rounded-lg px-3 text-[15px] font-medium text-soft transition-colors hover:text-ink aria-[current=true]:text-accent-ink">Experience</a>
+      <a href="#skills" data-nav="skills" class="inline-flex min-h-[44px] items-center rounded-lg px-3 text-[15px] font-medium text-soft transition-colors hover:text-ink aria-[current=true]:text-accent-ink">Skills</a>
+      <a href="#contact" class="ml-3 inline-flex min-h-[44px] items-center rounded-xl bg-ink px-5 text-[15px] font-semibold text-white transition-colors hover:bg-accent">Get in Touch</a>
+    </nav>
+    <button id="menuBtn" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu" class="grid h-11 w-11 place-items-center rounded-xl border border-line bg-card text-ink md:hidden">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+  <div id="mobileMenu" hidden class="border-t border-line bg-card px-4 pb-4 pt-2 md:hidden">
+    <a href="#work" class="flex min-h-[48px] items-center border-b border-line text-base font-medium text-ink">Work</a>
+    <a href="#experience" class="flex min-h-[48px] items-center border-b border-line text-base font-medium text-ink">Experience</a>
+    <a href="#skills" class="flex min-h-[48px] items-center border-b border-line text-base font-medium text-ink">Skills</a>
+    <a href="#contact" class="mt-3 flex min-h-[48px] items-center justify-center rounded-xl bg-accent text-base font-semibold text-white">Get in Touch</a>
+  </div>
+</header>
+
+<main class="mx-auto max-w-page px-4 sm:px-6 lg:px-8">
+
+  <!-- Hero -->
+  <section class="grid items-center gap-14 pb-16 pt-12 sm:pt-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12 lg:pb-24 lg:pt-24">
+    <div class="min-w-0">
+      <span class="reveal inline-flex items-center gap-2 rounded-full border border-line bg-card px-3.5 py-1.5 text-[13px] font-medium text-body shadow-soft">
+        <span class="pulse h-2 w-2 rounded-full bg-ok"></span>Open to VAPT &amp; AppSec roles
+      </span>
+      <h1 class="reveal mt-6 text-[2.6rem] font-extrabold leading-[1.05] tracking-[-0.035em] text-ink sm:text-6xl lg:text-[4.1rem]">
+        Atharva Sail<br><span class="text-accent">VAPT Analyst.</span>
+      </h1>
+      <p class="reveal mt-6 max-w-[54ch] text-lg leading-relaxed text-body sm:text-xl">
+        I find the vulnerabilities attackers would use in web, mobile, network, API and LLM applications. Then I write clear reports that get them fixed, and I build open-source tools that make testing faster.
+      </p>
+      <div class="reveal mt-9 flex flex-col gap-3 sm:flex-row">
+        <a href="#contact" class="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-accent px-7 text-base font-semibold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-accent-ink">Get in Touch
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+        <a href="#work" class="inline-flex min-h-[52px] items-center justify-center rounded-xl border border-line2 bg-card px-7 text-base font-semibold text-ink transition hover:-translate-y-0.5 hover:border-accent">View Projects</a>
+      </div>
+      <div class="reveal mt-8 flex items-center gap-2">
+        <a href="https://www.linkedin.com/in/atharva-sail" target="_blank" rel="noopener" aria-label="LinkedIn" class="grid h-11 w-11 place-items-center rounded-xl border border-line bg-card text-soft transition hover:border-accent hover:text-accent">
+          <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
+        <a href="https://github.com/ATHARVASAIL" target="_blank" rel="noopener" aria-label="GitHub" class="grid h-11 w-11 place-items-center rounded-xl border border-line bg-card text-soft transition hover:border-accent hover:text-accent">
+          <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.27 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+        <a href="https://tryhackme.com/p/kirahack10669" target="_blank" rel="noopener" aria-label="TryHackMe" class="grid h-11 w-11 place-items-center rounded-xl border border-line bg-card text-soft transition hover:border-accent hover:text-accent">
+          <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3m5 0h5"/></svg></a>
+        <a href="https://profile.hackthebox.com/profile/019fe129-f91a-73fb-b789-334a41568712" target="_blank" rel="noopener" aria-label="Hack The Box" class="grid h-11 w-11 place-items-center rounded-xl border border-line bg-card text-soft transition hover:border-accent hover:text-accent">
+          <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7zM3 7l9 5 9-5M12 12v10"/></svg></a>
+      </div>
+    </div>
+
+    <!-- Hero visual: a sample finding card -->
+    <div class="reveal relative mx-auto w-full max-w-[520px] lg:mx-0">
+      <div class="rounded-2xl border border-line bg-card shadow-lift">
+        <div class="flex items-center gap-3 border-b border-line px-5 py-3.5">
+          <span class="flex gap-1.5" aria-hidden="true"><i class="h-2.5 w-2.5 rounded-full bg-line2"></i><i class="h-2.5 w-2.5 rounded-full bg-line2"></i><i class="h-2.5 w-2.5 rounded-full bg-line2"></i></span>
+          <span class="truncate font-mono text-xs text-soft">assessment-report · finding 07</span>
+        </div>
+        <div class="space-y-4 p-5 sm:p-6">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h2 class="text-lg font-bold text-ink">IDOR exposes other users' orders</h2>
+            <span class="rounded-md bg-[#FEF0E6] px-2 py-0.5 font-mono text-xs font-medium text-high">HIGH</span>
+          </div>
+          <div class="overflow-x-auto rounded-xl bg-[#F4F5F9] p-4 font-mono text-[12.5px] leading-[1.75] text-body"><pre class="m-0"><span class="font-medium text-accent-ink">GET</span> /api/v2/orders/<span class="font-medium text-crit">10482</span> HTTP/1.1
+Host: shop.example.test
+Authorization: Bearer &lt;user-A token&gt;
+
+<span class="text-ok">200 OK</span> · returns user B's address</pre></div>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="rounded-xl border border-line p-2.5"><p class="font-mono text-[11px] text-soft">CVSS</p><p class="text-lg font-bold tabular-nums text-ink">8.1</p></div>
+            <div class="rounded-xl border border-line p-2.5"><p class="font-mono text-[11px] text-soft">CWE</p><p class="text-lg font-bold tabular-nums text-ink">639</p></div>
+            <div class="rounded-xl border border-line p-2.5"><p class="font-mono text-[11px] text-soft">OWASP</p><p class="text-lg font-bold text-ink">API1</p></div>
+          </div>
+          <p class="text-sm leading-relaxed text-body"><b class="font-semibold text-ink">Fix:</b> check object ownership on the server for every order lookup, then retest with two accounts.</p>
+        </div>
+      </div>
+      <div class="float-a absolute -right-2 -top-5 rounded-xl border border-line bg-card px-3.5 py-2 shadow-soft sm:-right-6">
+        <p class="flex items-center gap-1.5 text-sm font-semibold text-ok"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Fixed at retest</p>
+      </div>
+      <div class="float-b absolute -bottom-5 -left-2 rounded-xl border border-line bg-card px-3.5 py-2 shadow-soft sm:-left-6">
+        <p class="font-mono text-xs text-soft">30+ reports · <span class="font-semibold text-accent-ink">90%+ fixed</span></p>
+      </div>
+      <p class="mt-9 text-center font-mono text-[11px] text-soft">Illustrative finding format · no client data</p>
+    </div>
+  </section>
+
+  <!-- Stats band -->
+  <section aria-label="Client work in numbers" class="reveal grid grid-cols-2 overflow-hidden rounded-2xl border border-line bg-card shadow-soft md:grid-cols-4">
+    <div class="border-b border-r border-line p-6 md:border-b-0 sm:p-7"><p class="text-3xl font-extrabold tracking-tight text-ink tabular-nums sm:text-4xl">25+</p><p class="mt-1 text-sm text-soft">web app assessments</p></div>
+    <div class="border-b border-line p-6 md:border-b-0 md:border-r sm:p-7"><p class="text-3xl font-extrabold tracking-tight text-ink tabular-nums sm:text-4xl">15+</p><p class="mt-1 text-sm text-soft">network environments</p></div>
+    <div class="border-r border-line p-6 sm:p-7"><p class="text-3xl font-extrabold tracking-tight text-ink tabular-nums sm:text-4xl">10+</p><p class="mt-1 text-sm text-soft">Android &amp; iOS apps</p></div>
+    <div class="p-6 sm:p-7"><p class="text-3xl font-extrabold tracking-tight text-accent tabular-nums sm:text-4xl">90%+</p><p class="mt-1 text-sm text-soft">fix rate at retest</p></div>
+  </section>
+
+  <!-- Work -->
+  <section id="work" class="py-24 sm:py-28">
+    <div class="reveal max-w-[620px]">
+      <p class="font-mono text-[13px] font-medium uppercase tracking-[0.14em] text-accent-ink">Projects</p>
+      <h2 class="mt-3 text-3xl font-extrabold tracking-[-0.025em] text-ink sm:text-[2.6rem] sm:leading-[1.1]">Security tools I designed and built</h2>
+      <p class="mt-4 text-lg leading-relaxed text-body">Each one came from a gap I hit while testing, and each one keeps the tester in control.</p>
+    </div>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <!-- Watcher -->
+      <a href="https://atharvasail.github.io/Watcher/" target="_blank" rel="noopener" class="reveal card-hover group flex flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-soft">
+        <div class="shot relative aspect-[16/10] overflow-hidden border-b border-line bg-gradient-to-br from-[#F4F5FB] to-[#ECEEFA]" aria-hidden="true">
+          <svg class="absolute inset-0 h-full w-full" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><rect x="70" y="26" width="180" height="160" rx="10" class="pv-panel"/><rect x="70" y="26" width="180" height="160" rx="10" class="pv-stroke"/><circle cx="96" cy="50" r="10" class="pv-acc"/><circle cx="96" cy="50" r="4" fill="#fff"/><rect x="114" y="45" width="60" height="9" rx="3" class="pv-ink"/><rect x="84" y="72" width="34" height="22" rx="5" class="pv-panel2"/><rect x="124" y="72" width="34" height="22" rx="5" class="pv-panel2"/><rect x="164" y="72" width="34" height="22" rx="5" class="pv-panel2"/><rect x="204" y="72" width="34" height="22" rx="5" class="pv-panel2"/><rect x="91" y="80" width="8" height="6" rx="2" class="pv-crit"/><rect x="131" y="80" width="8" height="6" rx="2" class="pv-high"/><rect x="171" y="80" width="8" height="6" rx="2" class="pv-med"/><rect x="211" y="80" width="8" height="6" rx="2" class="pv-ok"/><rect x="84" y="104" width="154" height="22" rx="5" class="pv-panel2"/><rect x="84" y="104" width="3" height="22" class="pv-crit"/><rect x="94" y="111" width="70" height="7" rx="2" class="pv-ink"/><text x="172" y="118" class="pv-text">sk_live_••••</text><rect x="84" y="132" width="154" height="22" rx="5" class="pv-panel2"/><rect x="84" y="132" width="3" height="22" class="pv-high"/><rect x="94" y="139" width="56" height="7" rx="2" class="pv-ink"/><text x="172" y="146" class="pv-text">.map exposed</text><rect x="84" y="160" width="154" height="18" rx="5" class="pv-panel2"/><rect x="84" y="160" width="3" height="18" class="pv-med"/><rect x="94" y="166" width="64" height="6" rx="2" class="pv-dim"/></svg>
+          <span class="absolute left-3 top-3 rounded-md border border-line bg-card/90 px-2 py-0.5 font-mono text-[11px] text-soft">Chrome extension</span>
+        </div>
+        <div class="flex flex-1 flex-col gap-3 p-6">
+          <h3 class="text-xl font-bold text-ink">Watcher</h3>
+          <p class="text-[15px] leading-relaxed text-body">Finds secrets accidentally shipped in a web app's frontend: API keys, tokens, source maps and exposed config files. 69 rules, local-only.</p>
+          <div class="flex flex-wrap gap-1.5"><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">JavaScript</span><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">Chrome MV3</span><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">SARIF</span></div>
+          <span class="mt-auto inline-flex items-center gap-1.5 pt-2 text-[15px] font-semibold text-accent-ink">View project <svg class="arrow h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
+        </div>
+      </a>
+
+      <!-- GreySh3ll -->
+      <a href="https://atharvasail.github.io/GreySh3ll/" target="_blank" rel="noopener" class="reveal card-hover group flex flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-soft">
+        <div class="shot relative aspect-[16/10] overflow-hidden border-b border-line bg-gradient-to-br from-[#F4F5FB] to-[#ECEEFA]" aria-hidden="true">
+          <svg class="absolute inset-0 h-full w-full" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><rect x="30" y="28" width="260" height="150" rx="10" class="pv-panel"/><rect x="30" y="28" width="260" height="150" rx="10" class="pv-stroke"/><rect x="31" y="29" width="62" height="148" rx="9" class="pv-panel2"/><rect x="42" y="44" width="38" height="6" rx="2" class="pv-acc"/><rect x="42" y="60" width="32" height="5" rx="2" class="pv-ink"/><rect x="42" y="72" width="36" height="5" rx="2" class="pv-ink"/><rect x="42" y="84" width="28" height="5" rx="2" class="pv-ink"/><rect x="42" y="96" width="34" height="5" rx="2" class="pv-ink"/><rect x="104" y="44" width="54" height="40" rx="6" class="pv-panel2"/><text x="112" y="62" class="pv-text-acc">NET</text><text x="112" y="76" class="pv-text">180</text><rect x="166" y="44" width="54" height="40" rx="6" class="pv-panel2"/><text x="174" y="62" class="pv-text-acc">WEB</text><text x="174" y="76" class="pv-text">156</text><rect x="228" y="44" width="50" height="40" rx="6" class="pv-panel2"/><text x="236" y="62" class="pv-text-acc">WIFI</text><text x="236" y="76" class="pv-text">68</text><rect x="104" y="92" width="54" height="40" rx="6" class="pv-panel2"/><text x="112" y="110" class="pv-text-acc">API</text><text x="112" y="124" class="pv-text">41</text><rect x="166" y="92" width="54" height="40" rx="6" class="pv-panel2"/><text x="174" y="110" class="pv-text-acc">CLOUD</text><text x="174" y="124" class="pv-text">44</text><rect x="228" y="92" width="50" height="40" rx="6" class="pv-panel2"/><text x="236" y="110" class="pv-text-acc">LLM</text><text x="236" y="124" class="pv-text">24</text><rect x="104" y="144" width="174" height="8" rx="4" class="pv-dim"/><rect x="104" y="144" width="118" height="8" rx="4" class="pv-acc"/><text x="104" y="168" class="pv-text">697 cases · 10 domains</text></svg>
+          <span class="absolute left-3 top-3 rounded-md border border-line bg-card/90 px-2 py-0.5 font-mono text-[11px] text-soft">Assessment console</span>
+        </div>
+        <div class="flex flex-1 flex-col gap-3 p-6">
+          <h3 class="text-xl font-bold text-ink">GreySh3ll</h3>
+          <p class="text-[15px] leading-relaxed text-body">A browser-based VAPT console with 697 test cases across 10 domains, mapped to OWASP, NIST SP 800-53, CWE and MITRE ATT&amp;CK.</p>
+          <div class="flex flex-wrap gap-1.5"><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">JavaScript</span><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">Python</span><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">ATT&amp;CK</span></div>
+          <span class="mt-auto inline-flex items-center gap-1.5 pt-2 text-[15px] font-semibold text-accent-ink">View project <svg class="arrow h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
+        </div>
+      </a>
+
+      <!-- Kompromap -->
+      <a href="https://github.com/ATHARVASAIL/kompromap" target="_blank" rel="noopener" class="reveal card-hover group flex flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-soft">
+        <div class="shot relative aspect-[16/10] overflow-hidden border-b border-line bg-gradient-to-br from-[#F4F5FB] to-[#ECEEFA]" aria-hidden="true">
+          <svg class="absolute inset-0 h-full w-full" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><g class="pv-stroke" stroke-width="1.5"><path d="M60 100 L120 60 M60 100 L120 140 M120 60 L190 50 M120 140 L190 150 M190 50 L250 100 M190 150 L250 100 M120 60 L190 150"/></g><path d="M60 100 L120 140 L190 150 L250 100" class="pv-acc-s" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 5"/><circle cx="60" cy="100" r="13" class="pv-panel"/><circle cx="60" cy="100" r="13" class="pv-acc-s" stroke-width="2"/><circle cx="120" cy="60" r="10" class="pv-panel"/><circle cx="120" cy="60" r="10" class="pv-stroke"/><circle cx="120" cy="140" r="10" class="pv-med"/><circle cx="190" cy="50" r="10" class="pv-panel"/><circle cx="190" cy="50" r="10" class="pv-stroke"/><circle cx="190" cy="150" r="10" class="pv-high"/><circle cx="250" cy="100" r="15" class="pv-crit"/><text x="38" y="128" class="pv-text">attacker</text><text x="228" y="132" class="pv-text">crown jewel</text><text x="128" y="182" class="pv-text-acc">easiest path · 3 hops</text></svg>
+          <span class="absolute left-3 top-3 rounded-md border border-line bg-card/90 px-2 py-0.5 font-mono text-[11px] text-soft">Attack-path graph</span>
+        </div>
+        <div class="flex flex-1 flex-col gap-3 p-6">
+          <h3 class="text-xl font-bold text-ink">Kompromap</h3>
+          <p class="text-[15px] leading-relaxed text-body">Turns Nmap, Nuclei, Burp and ZAP output into an attack-chain graph and ranks paths to critical assets by attacker effort.</p>
+          <div class="flex flex-wrap gap-1.5"><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">FastAPI</span><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">PostgreSQL</span><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">React</span></div>
+          <span class="mt-auto inline-flex items-center gap-1.5 pt-2 text-[15px] font-semibold text-accent-ink">View project <svg class="arrow h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
+        </div>
+      </a>
+
+      <!-- VISION -->
+      <div class="reveal card-hover flex flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-soft">
+        <div class="shot relative aspect-[16/10] overflow-hidden border-b border-line bg-gradient-to-br from-[#F4F5FB] to-[#ECEEFA]" aria-hidden="true">
+          <svg class="absolute inset-0 h-full w-full" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><rect x="34" y="30" width="252" height="146" rx="10" fill="#1C1E2B"/><text x="50" y="56" fill="#A5B4FC" font-family="JetBrains Mono,monospace" font-size="9">$ vision scan --scope lab.txt</text><text x="50" y="76" fill="#9AA1B2" font-family="JetBrains Mono,monospace" font-size="9">[12/32] smb enumeration ......</text><rect x="214" y="69" width="34" height="8" rx="2" class="pv-ok"/><text x="50" y="94" fill="#9AA1B2" font-family="JetBrains Mono,monospace" font-size="9">[13/32] ldap / ad checks .....</text><rect x="214" y="87" width="34" height="8" rx="2" class="pv-ok"/><text x="50" y="112" fill="#9AA1B2" font-family="JetBrains Mono,monospace" font-size="9">[14/32] tls assessment .......</text><rect x="214" y="105" width="22" height="8" rx="2" fill="#818CF8"/><text x="50" y="136" fill="#9AA1B2" font-family="JetBrains Mono,monospace" font-size="9">advisory: 1 module · 1 target</text><text x="50" y="154" fill="#A5B4FC" font-family="JetBrains Mono,monospace" font-size="9">type target IP to confirm ▌</text></svg>
+          <span class="absolute left-3 top-3 rounded-md border border-line bg-card/90 px-2 py-0.5 font-mono text-[11px] text-soft">Network VAPT CLI</span>
+        </div>
+        <div class="flex flex-1 flex-col gap-3 p-6">
+          <h3 class="text-xl font-bold text-ink">VISION</h3>
+          <p class="text-[15px] leading-relaxed text-body">A 32-stage network assessment CLI: enumeration, Active Directory and TLS checks, with exploit advice the analyst confirms target by target.</p>
+          <div class="flex flex-wrap gap-1.5"><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">Python</span><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">Nmap</span><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">Metasploit</span></div>
+          <span class="mt-auto pt-2 text-[15px] font-medium text-soft">Source available on request</span>
+        </div>
+      </div>
+
+      <!-- WebGuard -->
+      <a href="https://github.com/ATHARVASAIL/WebGuard-Advanced_Web_Vulnerability_Scanner" target="_blank" rel="noopener" class="reveal card-hover group flex flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-soft">
+        <div class="shot relative aspect-[16/10] overflow-hidden border-b border-line bg-gradient-to-br from-[#F4F5FB] to-[#ECEEFA]" aria-hidden="true">
+          <svg class="absolute inset-0 h-full w-full" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><rect x="88" y="22" width="144" height="168" rx="8" class="pv-panel"/><rect x="88" y="22" width="144" height="168" rx="8" class="pv-stroke"/><rect x="104" y="40" width="70" height="9" rx="2" class="pv-acc"/><rect x="104" y="56" width="100" height="5" rx="2" class="pv-dim"/><text x="104" y="86" class="pv-text">SQLi</text><rect x="146" y="79" width="70" height="8" rx="2" class="pv-crit"/><text x="104" y="104" class="pv-text">XSS</text><rect x="146" y="97" width="52" height="8" rx="2" class="pv-high"/><text x="104" y="122" class="pv-text">SSRF</text><rect x="146" y="115" width="36" height="8" rx="2" class="pv-high"/><text x="104" y="140" class="pv-text">CSRF</text><rect x="146" y="133" width="24" height="8" rx="2" class="pv-med"/><rect x="104" y="156" width="112" height="5" rx="2" class="pv-dim"/><rect x="104" y="166" width="90" height="5" rx="2" class="pv-dim"/></svg>
+          <span class="absolute left-3 top-3 rounded-md border border-line bg-card/90 px-2 py-0.5 font-mono text-[11px] text-soft">Web scanner</span>
+        </div>
+        <div class="flex flex-1 flex-col gap-3 p-6">
+          <h3 class="text-xl font-bold text-ink">WebGuard</h3>
+          <p class="text-[15px] leading-relaxed text-body">A Python scanner for SQLi, XSS, CSRF, SSRF and directory traversal that produces PDF and JSON reports with remediation guidance.</p>
+          <div class="flex flex-wrap gap-1.5"><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">Python</span><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">Flask</span></div>
+          <span class="mt-auto inline-flex items-center gap-1.5 pt-2 text-[15px] font-semibold text-accent-ink">View project <svg class="arrow h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
+        </div>
+      </a>
+
+      <!-- Evidence -->
+      <a href="https://github.com/ATHARVASAIL/Evidence-Management-System" target="_blank" rel="noopener" class="reveal card-hover group flex flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-soft">
+        <div class="shot relative aspect-[16/10] overflow-hidden border-b border-line bg-gradient-to-br from-[#F4F5FB] to-[#ECEEFA]" aria-hidden="true">
+          <svg class="absolute inset-0 h-full w-full" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"><rect x="28" y="72" width="70" height="56" rx="8" class="pv-panel"/><rect x="28" y="72" width="70" height="56" rx="8" class="pv-stroke"/><text x="38" y="92" class="pv-text-acc">#1041</text><rect x="38" y="102" width="50" height="5" rx="2" class="pv-dim"/><rect x="38" y="112" width="36" height="5" rx="2" class="pv-dim"/><path d="M98 100 H126" class="pv-acc-s" stroke-width="2"/><rect x="126" y="72" width="70" height="56" rx="8" class="pv-panel"/><rect x="126" y="72" width="70" height="56" rx="8" class="pv-stroke"/><text x="136" y="92" class="pv-text-acc">#1042</text><rect x="136" y="102" width="50" height="5" rx="2" class="pv-dim"/><rect x="136" y="112" width="40" height="5" rx="2" class="pv-dim"/><path d="M196 100 H224" class="pv-acc-s" stroke-width="2"/><rect x="224" y="72" width="70" height="56" rx="8" class="pv-panel"/><rect x="224" y="72" width="70" height="56" rx="8" class="pv-acc-s" stroke-width="1.5"/><text x="234" y="92" class="pv-text-acc">#1043</text><rect x="234" y="102" width="50" height="5" rx="2" class="pv-dim"/><rect x="234" y="112" width="30" height="5" rx="2" class="pv-ok"/><text x="96" y="160" class="pv-text">sha256 anchored · file on IPFS</text></svg>
+          <span class="absolute left-3 top-3 rounded-md border border-line bg-card/90 px-2 py-0.5 font-mono text-[11px] text-soft">Blockchain custody</span>
+        </div>
+        <div class="flex flex-1 flex-col gap-3 p-6">
+          <h3 class="text-xl font-bold text-ink">Evidence Management System</h3>
+          <p class="text-[15px] leading-relaxed text-body">Tamper-proof chain of custody: evidence hashes anchored on-chain and files stored on IPFS, so records cannot be quietly rewritten.</p>
+          <div class="flex flex-wrap gap-1.5"><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">Solidity</span><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">IPFS</span><span class="rounded-md bg-accent-tint px-2 py-0.5 font-mono text-[11.5px] text-accent-ink">React</span></div>
+          <span class="mt-auto inline-flex items-center gap-1.5 pt-2 text-[15px] font-semibold text-accent-ink">View project <svg class="arrow h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience" class="border-t border-line py-24 sm:py-28">
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:gap-16">
+      <div class="reveal lg:sticky lg:top-28 lg:self-start">
+        <p class="font-mono text-[13px] font-medium uppercase tracking-[0.14em] text-accent-ink">Experience</p>
+        <h2 class="mt-3 text-3xl font-extrabold tracking-[-0.025em] text-ink sm:text-[2.6rem] sm:leading-[1.1]">Where I've done the work</h2>
+        <p class="mt-4 text-lg leading-relaxed text-body">Live client environments, tested to OWASP, PTES and NIST, with every finding retested until it's closed.</p>
+      </div>
+
+      <ol class="timeline relative space-y-6">
+        <li class="reveal relative pl-12">
+          <span class="absolute left-[4px] top-6 h-4 w-4 rounded-full border-[3px] border-accent bg-card" aria-hidden="true"></span>
+          <div class="rounded-2xl border border-line bg-card p-6 shadow-soft sm:p-7">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <h3 class="text-xl font-bold text-ink">VAPT Junior Analyst Intern</h3>
+              <span class="font-mono text-[13px] text-soft">Oct 2025 – May 2026</span>
+            </div>
+            <p class="mt-1 font-semibold text-accent-ink">Anzen Technologies Pvt. Ltd.</p>
+            <ul class="mt-5 list-disc space-y-2.5 pl-5 text-[15.5px] leading-relaxed text-body marker:text-accent">
+              <li>Ran 25+ web application assessments, finding SQL injection, XSS, CSRF, SSRF, IDOR and business-logic flaws.</li>
+              <li>Tested 10+ Android and iOS apps and REST APIs in 8+ applications, uncovering insecure storage, authentication bypass and authorization flaws.</li>
+              <li>Performed network VAPT across 15+ environments and tested LLM features for prompt injection and data leakage.</li>
+              <li>Wrote 30+ reports with CVSS, proof of concept and remediation, reaching a 90%+ fix rate at retest.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="reveal relative pl-12">
+          <span class="absolute left-[4px] top-6 h-4 w-4 rounded-full border-[3px] border-line2 bg-card" aria-hidden="true"></span>
+          <div class="rounded-2xl border border-line bg-card p-6 shadow-soft sm:p-7">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <h3 class="text-xl font-bold text-ink">Cyber Security Intern</h3>
+              <span class="font-mono text-[13px] text-soft">2024</span>
+            </div>
+            <p class="mt-1 font-semibold text-accent-ink">Prodigy Infotech</p>
+            <ul class="mt-5 list-disc space-y-2.5 pl-5 text-[15.5px] leading-relaxed text-body marker:text-accent">
+              <li>Completed a structured cybersecurity internship built around practical security exercises.</li>
+              <li>Built WebGuard, a Python web vulnerability scanner with PDF and JSON reporting.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="reveal relative pl-12">
+          <span class="absolute left-[4px] top-6 h-4 w-4 rounded-full border-[3px] border-line2 bg-card" aria-hidden="true"></span>
+          <div class="rounded-2xl border border-line bg-card p-6 shadow-soft sm:p-7">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <h3 class="text-xl font-bold text-ink">B.E. Computer Science</h3>
+              <span class="font-mono text-[13px] text-soft">2021 – 2025</span>
+            </div>
+            <p class="mt-1 font-semibold text-accent-ink">IoT &amp; Cybersecurity with Blockchain</p>
+            <ul class="mt-5 list-disc space-y-2.5 pl-5 text-[15.5px] leading-relaxed text-body marker:text-accent">
+              <li>Built a blockchain-based Evidence Management System on Solidity and IPFS.</li>
+              <li>Completed 50+ hands-on labs on TryHackMe, Hack The Box and PortSwigger Web Security Academy.</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="border-t border-line py-24 sm:py-28">
+    <div class="reveal max-w-[620px]">
+      <p class="font-mono text-[13px] font-medium uppercase tracking-[0.14em] text-accent-ink">Skills</p>
+      <h2 class="mt-3 text-3xl font-extrabold tracking-[-0.025em] text-ink sm:text-[2.6rem] sm:leading-[1.1]">What I work with</h2>
+    </div>
+    <div class="mt-12 grid gap-5 sm:grid-cols-2">
+      <div class="reveal card-hover rounded-2xl border border-line bg-card p-6 shadow-soft sm:p-7">
+        <div class="flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-xl bg-accent-tint text-accent"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/></svg></span><h3 class="text-lg font-bold text-ink">Security testing</h3></div>
+        <ul class="mt-5 flex flex-wrap gap-2"><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Web application VAPT</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Android &amp; iOS</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Network</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">REST API</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">LLM / prompt injection</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Reporting &amp; CVSS</li></ul>
+      </div>
+      <div class="reveal card-hover rounded-2xl border border-line bg-card p-6 shadow-soft sm:p-7">
+        <div class="flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-xl bg-accent-tint text-accent"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg></span><h3 class="text-lg font-bold text-ink">Tools</h3></div>
+        <ul class="mt-5 flex flex-wrap gap-2"><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Burp Suite</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Nmap</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Nessus</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Wireshark</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">MobSF</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Frida</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">JADX</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Apktool</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Postman</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Nikto</li></ul>
+      </div>
+      <div class="reveal card-hover rounded-2xl border border-line bg-card p-6 shadow-soft sm:p-7">
+        <div class="flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-xl bg-accent-tint text-accent"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5m8-10 5 5-5 5"/></svg></span><h3 class="text-lg font-bold text-ink">Languages &amp; frameworks</h3></div>
+        <ul class="mt-5 flex flex-wrap gap-2"><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Python</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">JavaScript</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Java</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">C</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Solidity</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Flask</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">FastAPI</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">React</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">MySQL</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Git</li></ul>
+      </div>
+      <div class="reveal card-hover rounded-2xl border border-line bg-card p-6 shadow-soft sm:p-7">
+        <div class="flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-xl bg-accent-tint text-accent"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg></span><h3 class="text-lg font-bold text-ink">Standards &amp; certifications</h3></div>
+        <ul class="mt-5 flex flex-wrap gap-2"><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">OWASP Top 10</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">OWASP MASVS</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">PTES</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">NIST</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">MITRE ATT&amp;CK</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">NPTEL Ethical Hacking</li><li class="rounded-lg border border-line bg-paper px-3 py-1.5 text-[14.5px] text-body">Tata Cyber Simulation</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="pb-24 sm:pb-28">
+    <div class="reveal overflow-hidden rounded-3xl border border-line bg-card shadow-lift">
+      <div class="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+        <div class="relative bg-[#1C1E2B] p-8 text-white sm:p-10 lg:p-12">
+          <div class="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-accent/40 blur-3xl" aria-hidden="true"></div>
+          <p class="relative font-mono text-[13px] font-medium uppercase tracking-[0.14em] text-[#C7CBFF]">Contact</p>
+          <h2 class="relative mt-3 text-3xl font-extrabold tracking-[-0.025em] sm:text-4xl">Let's work together.</h2>
+          <p class="relative mt-4 max-w-[40ch] text-lg leading-relaxed text-[#CDD0DA]">Hiring for a security role, or have an application that needs testing? Send a short note and I'll reply within two working days.</p>
+          <div class="relative mt-8 grid gap-3">
+            <a href="https://www.linkedin.com/in/atharva-sail" target="_blank" rel="noopener" class="flex min-h-[52px] items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 text-[15px] font-medium transition hover:border-white/30 hover:bg-white/10">
+              <svg class="h-5 w-5 text-[#C7CBFF]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+              LinkedIn<span class="ml-auto font-mono text-xs text-[#AEB3C2]">in/atharva-sail ↗</span></a>
+            <a href="https://github.com/ATHARVASAIL" target="_blank" rel="noopener" class="flex min-h-[52px] items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 text-[15px] font-medium transition hover:border-white/30 hover:bg-white/10">
+              <svg class="h-5 w-5 text-[#C7CBFF]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.27 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>
+              GitHub<span class="ml-auto font-mono text-xs text-[#AEB3C2]">ATHARVASAIL ↗</span></a>
+          </div>
+        </div>
+
+        <form id="contactForm" novalidate class="grid gap-5 p-8 sm:p-10 lg:p-12">
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div class="grid gap-2">
+              <label for="cf-name" class="text-[15px] font-semibold text-ink">Name</label>
+              <input id="cf-name" name="name" type="text" autocomplete="name" required placeholder="Your name" class="min-h-[50px] w-full rounded-xl border border-line2 bg-paper px-4 text-base text-ink placeholder:text-soft focus:border-accent focus:bg-card focus:outline-none focus:ring-4 focus:ring-accent/15 aria-[invalid=true]:border-crit">
+              <p id="err-name" class="text-sm text-crit"></p>
+            </div>
+            <div class="grid gap-2">
+              <label for="cf-email" class="text-[15px] font-semibold text-ink">Email</label>
+              <input id="cf-email" name="email" type="email" inputmode="email" autocomplete="email" required placeholder="you@company.com" class="min-h-[50px] w-full rounded-xl border border-line2 bg-paper px-4 text-base text-ink placeholder:text-soft focus:border-accent focus:bg-card focus:outline-none focus:ring-4 focus:ring-accent/15 aria-[invalid=true]:border-crit">
+              <p id="err-email" class="text-sm text-crit"></p>
+            </div>
+          </div>
+          <div class="grid gap-2">
+            <label for="cf-message" class="text-[15px] font-semibold text-ink">Message</label>
+            <textarea id="cf-message" name="message" rows="6" required placeholder="A few lines about the role or the scope" class="w-full resize-y rounded-xl border border-line2 bg-paper px-4 py-3 text-base text-ink placeholder:text-soft focus:border-accent focus:bg-card focus:outline-none focus:ring-4 focus:ring-accent/15 aria-[invalid=true]:border-crit"></textarea>
+            <p id="err-message" class="text-sm text-crit"></p>
+          </div>
+          <button id="sendBtn" type="submit" class="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 text-base font-semibold text-white transition hover:-translate-y-0.5 hover:bg-accent-ink disabled:opacity-60 sm:w-max">Send message
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg></button>
+          <p id="formStatus" class="min-h-[1.5em] text-[15px] text-body" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="border-t border-line">
+  <div class="mx-auto flex max-w-page flex-col gap-2 px-4 py-8 text-sm text-soft sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+    <span>© 2026 Atharva Sail · Only test what you're authorised to test.</span>
+    <a href="#top" class="inline-flex min-h-[44px] items-center font-medium hover:text-ink">Back to top ↑</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* Set FORM_ENDPOINT to a Formspree form URL to receive messages directly.
+     Left empty, the form opens the visitor's email app with the message filled in. */
+  var FORM_ENDPOINT = '';
+  var CONTACT_EMAIL = 'atharvasail106@gmail.com';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* glass header once scrolled */
+  var header = document.querySelector('[data-header]');
+  function onScroll(){
+    var s = window.scrollY > 6;
+    header.classList.toggle('border-line', s); header.classList.toggle('border-transparent', !s);
+    header.classList.toggle('bg-paper/80', s); header.classList.toggle('backdrop-blur-md', s);
+  }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+
+  /* mobile menu */
+  var btn = document.getElementById('menuBtn'), menu = document.getElementById('mobileMenu');
+  function setMenu(open){ menu.hidden = !open; btn.setAttribute('aria-expanded', String(open)); btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); if (open) header.classList.add('bg-paper/80','backdrop-blur-md'); }
+  btn.addEventListener('click', function(){ setMenu(menu.hidden); });
+  menu.addEventListener('click', function(e){ if (e.target.closest('a')) setMenu(false); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') setMenu(false); });
+
+  /* current section in nav */
+  if ('IntersectionObserver' in window){
+    var links = document.querySelectorAll('[data-nav]');
+    var so = new IntersectionObserver(function(es){ es.forEach(function(en){ if (!en.isIntersecting) return; links.forEach(function(a){ a.setAttribute('aria-current', a.dataset.nav === en.target.id ? 'true' : 'false'); }); }); }, {rootMargin:'-40% 0px -55% 0px'});
+    ['work','experience','skills','contact'].forEach(function(id){ so.observe(document.getElementById(id)); });
+  }
+
+  /* subtle fade-in: only items below the first screen start hidden */
+  if (!reduce && 'IntersectionObserver' in window){
+    var ro = new IntersectionObserver(function(es){ es.forEach(function(en){ if (en.isIntersecting){ en.target.classList.remove('pre'); ro.unobserve(en.target); } }); }, {rootMargin:'0px 0px -8% 0px'});
+    var groups = new Map();
+    document.querySelectorAll('.reveal').forEach(function(el){
+      if (el.getBoundingClientRect().top > window.innerHeight){
+        var p = el.parentElement, i = (groups.get(p) || 0); groups.set(p, i + 1);
+        el.style.transitionDelay = Math.min(i * 80, 320) + 'ms';
+        el.classList.add('pre'); ro.observe(el);
+      }
+    });
+  }
+
+  /* contact form */
+  var form = document.getElementById('contactForm'), status = document.getElementById('formStatus'), send = document.getElementById('sendBtn');
+  var rules = {
+    name: function(v){ return v.length >= 2 ? '' : 'Please enter your name.'; },
+    email: function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'Please enter a valid email address.'; },
+    message: function(v){ return v.length >= 10 ? '' : 'Please write at least one sentence.'; }
+  };
+  function check(n){ var el = form.elements[n], m = rules[n](el.value.trim()); document.getElementById('err-' + n).textContent = m; el.setAttribute('aria-invalid', m ? 'true' : 'false'); return !m; }
+  Object.keys(rules).forEach(function(n){ form.elements[n].addEventListener('blur', function(){ if (this.value) check(n); }); });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!Object.keys(rules).map(check).every(Boolean)){ status.textContent = ''; var bad = form.querySelector('[aria-invalid="true"]'); if (bad) bad.focus(); return; }
+    var d = {name:form.elements.name.value.trim(), email:form.elements.email.value.trim(), message:form.elements.message.value.trim()};
+    if (FORM_ENDPOINT){
+      send.disabled = true; status.textContent = 'Sending…';
+      fetch(FORM_ENDPOINT, {method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(d)})
+        .then(function(r){ if (!r.ok) throw new Error(); status.textContent = 'Thanks, your message was sent. I will reply soon.'; form.reset(); })
+        .catch(function(){ status.textContent = 'The message could not be sent. Please try again or reach me on LinkedIn.'; })
+        .finally(function(){ send.disabled = false; });
+    } else {
+      window.location.href = 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent('Hello from ' + d.name) + '&body=' + encodeURIComponent(d.message + '\n\n' + d.name + ' (' + d.email + ')');
+      status.textContent = 'Your email app should open with this message ready to send. If it doesn’t, message me on LinkedIn.';
+    }
+  });
+})();
+</script>
+</body>
+</html>
